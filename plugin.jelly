@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<project xmlns:j="jelly:core">
+
+  <!-- makes sure that the relevant properties are set -->
+  <goal name="javanet:check">
+    <j:if test="${context.getVariable('maven.javanet.project')==null}">
+      <fail>Set "maven.javanet.project" to the project name on java.net</fail>
+    </j:if>
+  </goal>
+
+  <goal name="javanet:dist"
+        prereqs="javanet:check"
+        description="Post distribution zip/tar.gz to java.net">
+    
+    <attainGoal name="dist:build" />
+    
+    <taskdef resource="org/kohsuke/javanettasks.properties">
+      <classpath>
+        <fileset dir="${plugin.resources}/lib" includes="**/*.jar"/>
+        <pathelement path="${plugin.getDependencyPath('httpunit')}"/>
+        <pathelement path="${plugin.getDependencyPath('xml-apis')}"/>
+        <pathelement path="${plugin.getDependencyPath('xerces')}"/>
+        <pathelement path="${plugin.getDependencyPath('jtidy')}"/>
+        <pathelement path="${plugin.getDependencyPath('nekohtml')}"/>
+        <pathelement path="${plugin.getDependencyPath('dom4j')}"/>
+        <pathelement path="${plugin.getDependencyPath('jaxen')}"/>
+      </classpath>
+    </taskdef>
+    
+    <echo>Uploading files to ${maven.javanet.release.folder}</echo>
+    
+    <javaNetUpload projectName="${maven.javanet.project}"
+      toFile="${maven.javanet.release.folder}/${maven.final.name}.zip"
+      fromFile="${maven.dist.dir}/${maven.final.name}.zip"
+      overwrite="yes"
+      fileStatus="stable"
+    />
+    
+    <javaNetUpload projectName="${maven.javanet.project}"
+      toFile="${maven.javanet.release.folder}/${maven.final.name}.tar.gz"
+      fromFile="${maven.dist.dir}/${maven.final.name}.tar.gz"
+      overwrite="yes"
+      fileStatus="stable"
+    />
+    
+    <javaNetUpload projectName="${maven.javanet.project}"
+      toFile="${maven.javanet.release.folder}/${maven.final.name}-src.zip"
+      fromFile="${maven.dist.dir}/${maven.final.name}-src.zip"
+      overwrite="yes"
+      fileStatus="stable"
+    />
+    
+    <javaNetUpload projectName="${maven.javanet.project}"
+      toFile="${maven.javanet.release.folder}/${maven.final.name}-src.tar.gz"
+      fromFile="${maven.dist.dir}/${maven.final.name}-src.tar.gz"
+      overwrite="yes"
+      fileStatus="stable"
+    />
+    
+  </goal>
+  
+  
+  <goal name="javanet:site"
+        prereqs="javanet:check"
+        description="Post the generated website to java.net">
+    <attainGoal name="site:generate" />
+    <tstamp/>
+    
+    <!-- import the generated site -->
+    <cvs dest="${maven.docs.dest}" failonerror="true">
+      <commandline>
+        <argument value="-d${maven.javanet.cvsroot}"/>
+        <argument line="-z9 import -ko"/>
+        <argument value="-W"/>
+        <argument value="*.png -k 'b'"/>
+        <argument value="-W"/>
+        <argument value="*.gif -k 'b'"/>
+        <argument value="-m"/>
+        <argument value="deploying the new web contents"/>
+        
+        <argument value="${maven.javanet.project}/www/maven"/>
+        <argument line="site-deployment t${DSTAMP}${TSTAMP}" />
+      </commandline>
+    </cvs>
+    
+    <!--
+      java.net web page updater doesn't react to the import command,
+      so we need to commit another file to trigger the updater.
+      
+      check out www into target/javanet-www
+    -->
+    <delete dir="${maven.build.dir}/javanet-www" />
+    <cvs dest="${maven.build.dir}" failonerror="true">
+      <commandline>
+        <argument value="-d${maven.javanet.cvsroot}"/>
+        <argument line="-z9 checkout -d javanet-www -l ${maven.javanet.project}/www"/>
+      </commandline>
+    </cvs>
+    
+    <echo file="${maven.build.dir}/javanet-www/.java.net.updater">${DSTAMP}${TSTAMP}</echo>
+    
+    <!-- add (in case this file isn't already in place), then commit -->
+    <cvs dest="${maven.build.dir}/javanet-www" failonerror="false">
+      <commandline>
+        <argument line="add .java.net.updater"/>
+      </commandline>
+    </cvs>
+    <cvs dest="${maven.build.dir}/javanet-www" failonerror="true">
+      <commandline>
+        <argument value="commit"/>
+        <argument value="-m"/>
+        <argument value="working around a bug in the java.net cvs updater"/>
+        <argument value=".java.net.updater"/>
+      </commandline>
+    </cvs>
+  </goal>
+  
+</project>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<document>
+<body>
+<section name="Installing Maven java.net plugin">
+	<ol>
+		<li>
+			<a href="https://maven-javanet-plugin.dev.java.net/servlets/ProjectDocumentList">Download the plugin</a> and put the jar file into your $MAVEN_HOME/plugins.
+		</li>
+		<li>
+			Follow <a href="https://javanettasks.dev.java.net/nonav/maven/config.html">this instruction</a> and set up your java.net account information in <code>~/.java.net</code> file.
+		</li>
+	</ol>
+</section>
+
+</body>
+</document>

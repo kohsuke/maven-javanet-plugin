@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<document>
+<body>
+<section name="Uploading the distribution files to java.net">
+  <p>
+    The <code>javanet:dist</code> goal uploads the artifacts of the <code>dist</code> goal into your project's documents&amp;files section.
+  </p>
+</section>
+</body>
+</document>

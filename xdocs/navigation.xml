@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<project name="Maven retroweaver plugin">
+
+  <title>Maven retroweaver plugin</title>
+
+  <body>
+    <!--search/ --><!-- can add Google search -->
+    <!--links>
+      <item name="Jelly"                   href="http://jakarta.apache.org/commons/jelly/index.html"/>
+      <item name="Other Plugins"           href="http://maven-plugins.sourceforge.net/"/>
+    </links-->
+   <menu name="Overview">
+      <item name="Home"                    href="/index.html"/>
+      <item name="Install"                 href="/install.html"/>
+      <item name="Properties"              href="/properties.html"/>
+      <item name="Goals">
+        <item name="javanet:site"          href="/goals/site.html"/>
+        <item name="javanet:dist"          href="/goals/dist.html"/>
+      </item>
+    </menu>
+  </body>
+</project>

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<document>
+<body>
+<section name="Properties of the maven-javanet-plugin plugin">
+  <p>
+    This plugin recognizes the following properties.
+  </p>
+	<table border="1">
+		<thead>
+			<tr>
+				<td>Property name</td>
+				<td>Description</td>
+				<td>Default</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>maven.javanet.release.folder</td>
+				<td>
+					The name of the folder in your documents and files section to which
+					distribution files are uploaded. Used by the <code>javanet:dist</code> goal.
+					It can be something like "/release".
+				</td>
+				<td>/</td>
+			</tr>
+			<tr>
+				<td>maven.javanet.cvsroot</td>
+				<td>
+					The CVSROOT variable used to connect to the java.net CVS server.
+					Used by the <code>javanet:dist</code> goal.
+				</td>
+				<td>:pserver:${user.name}@cvs.dev.java.net:/cvs</td>
+			</tr>
+		</tbody>
+	</table>
+</section>
+</body>
+</document>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<document>
+<body>
+<section name="Maven java.net plugin">
+	<p>
+		This plugin provides a set of goals to assist projects hosted on java.net, such as:
+	</p>
+	<ol>
+		<li>Deploy the Maven-generated web site to java.net</li>
+		<li>Upload the distribution files to java.net</li>
+	</ol>
+	<p>
+		If you have suggestions about useful goals, or if you are interesetd in developing this plug-in, please let the owners know!
+	</p>
+</section>
+
+</body>
+</document>
