@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<project name="Maven retroweaver plugin">
+<project name="Maven java.net plugin">
 
-  <title>Maven retroweaver plugin</title>
+  <title>Maven java.net plugin</title>
 
   <body>
     <!--search/ --><!-- can add Google search -->
