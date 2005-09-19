@@ -6,6 +6,28 @@
     <currentVersion>1.0</currentVersion>
     <inceptionYear>2005</inceptionYear>
     <shortDescription>Goals for projects on java.net</shortDescription>
+    
+    <mailingLists>
+      <mailingList>
+        <name>Users List</name>
+        <subscribe>users-subscribe@maven-javanet-plugin.dev.java.net</subscribe>
+        <unsubscribe>users-unsubscribe@maven-javanet-plugin.dev.java.net</unsubscribe>
+        <archive>https://maven-javanet-plugin.dev.java.net/servlets/SummarizeList?listName=users</archive>
+      </mailingList>
+      <mailingList>
+        <name>Issues List</name>
+        <subscribe>issues-subscribe@maven-javanet-plugin.dev.java.net</subscribe>
+        <unsubscribe>issues-unsubscribe@maven-javanet-plugin.dev.java.net</unsubscribe>
+        <archive>https://maven-javanet-plugin.dev.java.net/servlets/SummarizeList?listName=issues</archive>
+      </mailingList>
+      <mailingList>
+        <name>CVS List</name>
+        <subscribe>cvs-subscribe@maven-javanet-plugin.dev.java.net</subscribe>
+        <unsubscribe>cvs-unsubscribe@maven-javanet-plugin.dev.java.net</unsubscribe>
+        <archive>https://maven-javanet-plugin.dev.java.net/servlets/SummarizeList?listName=cvs</archive>
+      </mailingList>
+    </mailingLists>
+    
     <developers>
         <developer>
             <name>Kohsuke Kawaguchi</name>
