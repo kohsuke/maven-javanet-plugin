@@ -15,6 +15,15 @@
 		</thead>
 		<tbody>
 			<tr>
+				<td>maven.javanet.project</td>
+				<td>
+					The name of your java.net project.
+				</td>
+				<td>
+					None. This must be given explicitly. Usually it should be in your <tt>project.properties</tt>
+				</td>
+			</tr>
+			<tr>
 				<td>maven.javanet.release.folder</td>
 				<td>
 					The name of the folder in your documents and files section to which
@@ -30,6 +39,14 @@
 					Used by the <code>javanet:dist</code> goal.
 				</td>
 				<td>:pserver:${maven.username}@cvs.dev.java.net:/cvs</td>
+			</tr>
+			<tr>
+				<td>maven.javanet.docroot</td>
+				<td>
+					The CVS directory to which site contents is deployed	.
+					Used by the <code>javanet:site</code> goal.
+				</td>
+				<td>${maven.javanet.project}/www/maven</td>
 			</tr>
 		</tbody>
 	</table>
