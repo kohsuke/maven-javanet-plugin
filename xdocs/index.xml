@@ -3,7 +3,7 @@
 <body>
 <section name="Maven java.net plugin">
 	<p>
-		This plugin provides a set of goals to assist projects hosted on java.net, such as:
+		Built on top of <a href="http://javanettasks.dev.java.net/">java.net tasks library</a>, this plugin provides a set of goals to assist projects hosted on java.net, such as:
 	</p>
 	<ol>
 		<li>Deploy the Maven-generated web site to java.net</li>
