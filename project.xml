@@ -7,6 +7,11 @@
   <inceptionYear>2005</inceptionYear>
   <shortDescription>Goals for projects on java.net</shortDescription>
   
+  <organization>
+    <name>java.net</name>
+    <url>http://www.java.net/</url>
+    <logo>https://jaxb.dev.java.net/branding/images/header_jnet_new.jpg</logo>
+  </organization>
   <issueTrackingUrl>https://maven-javanet-plugin.dev.java.net/servlets/ProjectIssues</issueTrackingUrl>
   <mailingLists>
     <mailingList>
