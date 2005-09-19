@@ -29,7 +29,7 @@
 					The CVSROOT variable used to connect to the java.net CVS server.
 					Used by the <code>javanet:dist</code> goal.
 				</td>
-				<td>:pserver:${user.name}@cvs.dev.java.net:/cvs</td>
+				<td>:pserver:${maven.username}@cvs.dev.java.net:/cvs</td>
 			</tr>
 		</tbody>
 	</table>
