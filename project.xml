@@ -7,6 +7,7 @@
     <inceptionYear>2005</inceptionYear>
     <shortDescription>Goals for projects on java.net</shortDescription>
     
+    <issueTrackingUrl>https://maven-javanet-plugin.dev.java.net/servlets/ProjectIssues</issueTrackingUrl>
     <mailingLists>
       <mailingList>
         <name>Users List</name>
