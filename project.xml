@@ -3,7 +3,7 @@
   <pomVersion>3</pomVersion>
   <id>maven-javanet-plugin</id>
   <name>Maven java.net plugin</name>
-  <currentVersion>1.0</currentVersion>
+  <currentVersion>1.0.1</currentVersion>
   <inceptionYear>2005</inceptionYear>
   <shortDescription>Goals for projects on java.net</shortDescription>
   
