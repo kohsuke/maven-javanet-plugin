@@ -1,7 +1,162 @@
 <?xml version="1.0"?>
-<project xmlns:j="jelly:core">
+<project xmlns:j="jelly:core" 
+         xmlns:util="jelly:util"
+         xmlns:maven="jelly:maven"
+         xmlns:define="jelly:define"
+         xmlns:javanet="javanet">
 
-  <!-- makes sure that the relevant properties are set -->
+  <!-- =============================
+       JELLY TAGS
+       ============================= -->
+  <define:taglib uri="javanet">
+  
+    <!--
+      Deploy an artifact to project's java.net CVS repository.
+      
+      'failonerror' - Fail on error (defaults true)
+    -->
+    <define:tag name="deploy">
+      <attainGoal name="javanet:check"/>      
+      <j:set var="failonerror" value="${failonerror}" defaultValue="true"/>
+      
+      <!-- 
+           VERY IMPORTANT to delete (poss CVS-working) directory if exists, or
+           conflicts arise when commiting java.net.updater.
+      -->
+      <j:set var="tempdir" value="${maven.build.dir}/repo"/>
+      <delete dir="${tempdir}"/>
+      
+      <!-- 
+        Run the body. This should be 'artifact' tags, each of which will
+        copy appropriately below the temp dir 
+      -->
+      <define:invokeBody/>      
+      
+      <!-- import the artifact(s). This should be done with common code for the
+           site deploy I guess...
+      -->
+      <tstamp/>          
+      <cvs dest="${tempdir}" failonerror="${failonerror}">
+        <commandline>
+          <argument value="-d${maven.javanet.cvsroot}"/>
+          <argument line="-z9 import -ko"/>
+          <argument value="-W"/>
+          <argument value="*.jar -k 'b'"/>
+          <argument value="-W"/>
+          <argument value="*.war -k 'b'"/>
+          <argument value="-W"/>
+          <argument value="*.zip -k 'b'"/>
+          <argument value="-W"/>
+          <argument value="*.tar.gz -k 'b'"/>
+          <argument value="-m"/>
+          <argument value="Repository deployment"/>
+          
+          <argument value="${maven.javanet.project}/repo"/>
+          <argument line="repo-deployment t${DSTAMP}${TSTAMP}" />
+        </commandline>
+      </cvs>
+      
+      <!-- TODO set 'failonerror' false and just check out the .jave.net.updater file? -->
+      <delete dir="${tempdir}"/>
+      <cvs dest="${maven.build.dir}" failonerror="true">
+        <commandline>
+          <argument value="-d${maven.javanet.cvsroot}"/>
+          <argument line="-z9 checkout -d repo -l ${maven.javanet.project}/repo"/>
+        </commandline>
+      </cvs>
+     
+      <!-- 'tempdir' is just a String remember -->
+      <echo file="${tempdir}/.java.net.updater">${DSTAMP}${TSTAMP}</echo>
+      <cvs dest="${tempdir}" failonerror="false">
+        <commandline>
+          <argument line="add .java.net.updater"/>
+        </commandline>
+      </cvs>
+      <cvs dest="${tempdir}" failonerror="true">
+        <commandline>
+          <argument value="commit"/>
+          <argument value="-m"/>
+          <argument value="working around a bug in the java.net cvs updater"/>
+          <argument value=".java.net.updater"/>
+        </commandline>
+      </cvs>
+      
+      <j:remove var="tempdir"/>
+    </define:tag>    
+
+    <!--
+      Represents a single artifact inside a javanet:deploy tag. Works by copying
+      each artifact to the ${tempdir} as it's encountered.
+      
+      'path'    - Path to the artifact (REQUIRED)
+      'type'    - Artifact type (jar, war, plugin, distribution. Default: based on file ext)
+      'withPom' - Copy POM? (defaults: true)      
+      
+      TODO I think we may need to support 'license' artifacts too?     
+    -->
+    <define:tag name="artifact">
+      <echo message="Processing artifact '${path}'"/>
+      
+      <j:if test="${tempdir == null}">
+        <fail message="javanet:artifact tag(s) must be contained within javanet:deploy"/>
+      </j:if>
+      <j:if test="${path == null}">
+        <fail message="You must specify the 'path' attribute to javanet:artifact"/>
+      </j:if>
+      <j:set var="withPom" value="${withPom}" defaultValue="true"/>
+      
+      <!-- auto-discover type from ext if not set. Plugins can't be auto'd (yet) -->
+      <j:if test="${type == null}">
+        <j:choose>
+          <j:when test="${path.endsWith('.pom')}">
+            <j:set var="type" value="pom"/>
+          </j:when>
+          <j:when test="${path.endsWith('.jar')}">
+            <j:set var="type" value="jar"/>
+          </j:when>
+          <j:when test="${path.endsWith('.war')}">
+            <j:set var="type" value="war"/>
+          </j:when>
+          <j:when test="${path.endsWith('.zip') || path.endsWith('.tar.gz')}">
+            <j:set var="type" value="distribution"/>
+          </j:when>
+          <j:otherwise>
+            <fail message="Artifact '${path}' is not compatible with the repository"/>
+          </j:otherwise>
+        </j:choose>
+      </j:if>    
+      
+      <j:set var="repoPath" value="${tempdir}/${type}s"/>
+
+      <echo message="Type is '${type}'"/>
+      <echo message="Path is '${repoPath}'"/>
+      
+      <mkdir dir="${repoPath}"/>
+      
+      <!-- COPY ARTIFACT -->
+      <copy todir="${repoPath}" file="${path}"/>      
+      <util:file var="artf" name="${path}"/>
+      <checksum file="${repoPath}/${artf.name}" algorithm="MD5" fileext=".md5"/>
+      <checksum file="${repoPath}/${artf.name}" algorithm="SHA" fileext=".sha1"/>
+      
+      <!-- COPY POM -->
+      <j:if test="${withPom}">
+        <j:set var="pomPath" value="${tempdir}/poms"/>
+        <mkdir dir="${pomPath}"/>
+        <copy tofile="${pomPath}/${maven.final.name}.pom" file="${pom.file.absolutePath}"/> 
+        <checksum todir="${pomPath}" file="${pomPath}/${maven.final.name}.pom" algorithm="MD5" fileext=".md5"/>
+        <checksum todir="${pomPath}" file="${pomPath}/${maven.final.name}.pom" algorithm="SHA" fileext=".sha1"/>      
+      </j:if>      
+    </define:tag>    
+  </define:taglib>
+  
+  <!-- =============================
+       PLUG-IN GOALS
+       ============================= -->
+  <!-- 
+      makes sure that the relevant properties are set and inits some 
+      jelly context vars.
+  -->
   <goal name="javanet:check">
     <j:if test="${context.getVariable('maven.javanet.project')==null}">
       <fail>Set "maven.javanet.project" to the project name on java.net</fail>
@@ -115,4 +270,40 @@
     </cvs>
   </goal>
   
+  <!-- 1.1 -->
+  <goal name="javanet:deploy-jar"
+        prereqs="javanet:check,jar:jar"
+        description="Deploy the Jar to the Java.net repository">
+    <javanet:deploy>
+      <javanet:artifact path="${maven.build.dir}/${maven.final.name}.jar"/>
+    </javanet:deploy>
+  </goal>
+  
+  <goal name="javanet:deploy-war"
+        prereqs="javanet:check,war:war"
+        description="Deploy the Jar to the Java.net repository">
+    <javanet:deploy>
+      <javanet:artifact path="${maven.build.dir}/${maven.final.name}.war"/>
+    </javanet:deploy>
+  </goal>
+  
+  <goal name="javanet:deploy-plugin"
+        prereqs="javanet:check,jar:jar"
+        description="Deploy the Jar to the Java.net repository">
+    <javanet:deploy>
+      <javanet:artifact path="${maven.build.dir}/${maven.final.name}.jar" type="plugin"/>
+    </javanet:deploy>
+  </goal>
+  
+  <goal name="javanet:deploy-dist"
+        prereqs="javanet:check,dist"
+        description="Deploy the Jar to the Java.net repository">
+    <javanet:deploy>
+      <javanet:artifact path="${maven.build.dir}/distributions/${maven.final.name}.zip"/>
+      <javanet:artifact path="${maven.build.dir}/distributions/${maven.final.name}.tar.gz" withpom="false"/>
+      <javanet:artifact path="${maven.build.dir}/distributions/${maven.final.name}-src.zip" withpom="false"/>
+      <javanet:artifact path="${maven.build.dir}/distributions/${maven.final.name}-src.tar.gz" withpom="false"/>
+    </javanet:deploy>
+  </goal>
+  <!-- == -->    
 </project>
