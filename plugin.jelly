@@ -35,19 +35,23 @@
       <!-- import the artifact(s). This should be done with common code for the
            site deploy I guess...
       -->
-      <tstamp/>          
+      <echo message="CVSROOT is: ${maven.javanet.cvsroot}"/>
+      
+      <tstamp/>    
       <cvs dest="${tempdir}" failonerror="${failonerror}">
         <commandline>
           <argument value="-d${maven.javanet.cvsroot}"/>
-          <argument line="-z9 import -ko"/>
+          <argument value="-z9"/>
+          <!-- --><argument value="-n"/><!-- --> <!-- testing -->
+          <argument line="import -ko"/>
           <argument value="-W"/>
-          <argument value="*.jar -k 'b'"/>
+          <argument line="*.jar -k 'b'"/>
           <argument value="-W"/>
-          <argument value="*.war -k 'b'"/>
+          <argument line="*.war -k 'b'"/>
           <argument value="-W"/>
-          <argument value="*.zip -k 'b'"/>
+          <argument line="*.zip -k 'b'"/>
           <argument value="-W"/>
-          <argument value="*.tar.gz -k 'b'"/>
+          <argument line="*.tar.gz -k 'b'"/>
           <argument value="-m"/>
           <argument value="Repository deployment"/>
           
@@ -56,10 +60,13 @@
         </commandline>
       </cvs>
       
-      <!-- TODO set 'failonerror' false and just check out the .jave.net.updater file? -->
+      <!-- TODO set 'failonerror' false and just check out & touch the .java.net.updater file? -->
+      <echo message="Tempdir is ${tempdir}"/>
       <delete dir="${tempdir}"/>
+      
       <cvs dest="${maven.build.dir}" failonerror="true">
         <commandline>
+          <!--<argument value="-n"/>--><!-- testing -->
           <argument value="-d${maven.javanet.cvsroot}"/>
           <argument line="-z9 checkout -d repo -l ${maven.javanet.project}/repo"/>
         </commandline>
@@ -69,11 +76,13 @@
       <echo file="${tempdir}/.java.net.updater">${DSTAMP}${TSTAMP}</echo>
       <cvs dest="${tempdir}" failonerror="false">
         <commandline>
+          <!--<argument value="-n"/>--><!-- testing -->
           <argument line="add .java.net.updater"/>
         </commandline>
       </cvs>
       <cvs dest="${tempdir}" failonerror="true">
         <commandline>
+          <!--<argument value="-n"/>--><!-- testing -->
           <argument value="commit"/>
           <argument value="-m"/>
           <argument value="working around a bug in the java.net cvs updater"/>
