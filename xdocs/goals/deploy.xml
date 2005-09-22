@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<document>
+<body>
+<section name="Deploying artifacts to the Java.net repository">
+  <p>
+    The <code>javanet:deploy-[artifact]</code> goals allow Maven-built Java.net projects to participate
+    in the site-wide Maven repository. Variants are provided for each of the main artifact types that
+    may be hosted in the repository:
+  </p>
+
+  <ul>
+    <li><code>javanet:deploy-jar</code> - Build with <code>jar:jar</code> then deploy as a jar.</li>
+    <li><code>javanet:deploy-war</code> - Build with <code>war:war</code> then deploy as a war.</li>
+    <li><code>javanet:deploy-plugin</code> - Build with <code>jar:jar</code> then deploy as a plugin.</li>
+    <li><code>javanet:deploy-dist</code> - Build with <code>dist</code> then deploy as distributions.</li>
+  </ul>
+
+  <p>
+    The operation of these goals is similar to that of the standard <code>[artifact]:deploy</code> 
+    goals. Specifically, the following steps are performed:
+  </p>
+
+  <ol>
+    <li>Create a temporary local repository (in <code>maven.build.dir</code>).</li>
+    <li>Determine the type of the artifact and compute the repository path.</li>
+    <li>Copy each artifact to the appropriate temporary directory.</li>
+    <li>Copy the project object model (POM) from <code>project.xml</code> to the repository.</li>
+    <li>Compute MD5 and SHA1 checksums for all deployed artifacts.</li>
+    <li>Import the repository changes to your project CVS for processing by the repository daemon.</li>
+  </ol>
+
+  <p>
+    <strong>Please Note</strong>: As mentioned above, deployment is handled via your project's CVS repository, 
+    and requires prior addition of a special user to your project on Java.net. Additionally, there may be a 
+    short delay between deploying your artifact and it's appearance in the repository.
+  </p>
+
+  <p>
+    In order to host artifacts in the repository, projects must ensure that the <code>groupId</code> 
+    defined in their POM matches the name of their project on java.net. This is an intentional limitation
+    of the system - artifacts will <strong>always</strong> be deployed to a repository location based on
+    the project name, regardless of the setting in the POM. Any mismatch may cause your artifacts to fail
+    when referenced in a build.
+  </p>
+
+  <p>
+    More information on the operation, requirements, and administration of the repository itself will be
+    found at the <a href='http://maven-repository.dev.java.net'>Maven Repository</a> project.
+  </p>
+
+  <subsection name="Snapshot builds">
+    <p>
+      The standard Maven Artifact plugin provides support for so-called <em>snapshot deployment</em>, 
+      which is a legacy deployment mode that operates by modifying the name of the deployed artifact(s),
+      replacing the version stamp with a timestamp. This method of deployment is deprecated in Maven, 
+      not least because it causes interoperability issues and leads unnecessarily to repository bloat,
+      and is not currently supported at all by the Java.net plugin.
+    </p>
+
+    <p>
+      As explained <a href='http://maven.apache.org/reference/plugins/artifact/tags.html' target='_blank'>here</a>,
+      the preferred way to obtain this functionality is to suffix the <code>currentVersion</code> in your 
+      <code>project.xml</code> with <code><strong>SNAPSHOT</strong></code>. Doing so will cause Maven
+      to examine to examine the timestamp on every build, downloading if the remote artifact is newer than
+      the local version.
+    </p>
+  </subsection>
+
+  <subsection name="Plugin build notes">
+  <p>
+    The <code>javanet:deploy-plugin</code> goal builds the project jar using the <code>jar:jar</code> 
+    goal, and then deploys the resulting artifact to the Maven repository as a Maven plugin 
+    artifact. Use this goal only if your project delivers a <code>.jar</code> artifact that conforms to the 
+    <a href='http://maven.apache.org/using/developing-plugins.html'>Requirements for a Maven plugin</a>.
+  </p>
+
+  <p>
+    Artifacts deployed using this goal can be downloaded and installed by any Maven user with 
+    a command like the following (on a single line):
+    <source>maven plugin:download \
+    -Dmaven.repo.remote=http://maven-repository.dev.java.net/repository \
+    -DgroupId=<strong>something4j</strong> \
+    -DartifactId=<strong>maven-something4j-plugin</strong> \
+    -Dversion=<strong>1.10</strong></source>
+    Replacing the boldfaced properties with the appropriate information for your project.
+  </p>
+  </subsection>
+
+  <subsection name="Distribution build notes">
+  <p>
+    The <code>javanet:deploy-dist</code> goal builds the distributions using the <code>dist</code> 
+    goal. As well as relying on artifact naming consistency (with <code>maven.final.name</code>) 
+    this places a further constraint by expecting the additional <code>-src</code> variants.
+    If you override the standard dist goal, you must <strong>either</strong> conform to the standard
+    naming scheme, or manually deploy your distribution archives from Jelly script.
+  </p>
+  </subsection>
+</section>
+</body>
+</document>

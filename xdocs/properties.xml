@@ -17,10 +17,12 @@
 			<tr>
 				<td>maven.javanet.project</td>
 				<td>
-					The name of your java.net project.
+					The name of your java.net project. This property is used by all goals. If you
+          are deploying your project in the site-wide repository, you <strong>must not</strong>
+          modify this property from the default, and the groupId must match the project name.
 				</td>
 				<td>
-					None. This must be given explicitly. Usually it should be in your <tt>project.properties</tt>
+					The value of <code>${pom.groupId}</code>.
 				</td>
 			</tr>
 			<tr>
@@ -36,7 +38,7 @@
 				<td>maven.javanet.cvsroot</td>
 				<td>
 					The CVSROOT variable used to connect to the java.net CVS server.
-					Used by the <code>javanet:dist</code> goal.
+					Used by the <code>javanet:site</code> and <code>javanet:deploy-[artifact]</code> goals.
 				</td>
 				<td>:pserver:${maven.username}@cvs.dev.java.net:/cvs</td>
 			</tr>

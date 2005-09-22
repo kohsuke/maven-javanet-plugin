@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<document>
+<body>
+<section name="Jelly tags provided by the Java.net plugin">
+  <p>
+    The Java.net plugin provides the following Jelly tags that may be used in Jelly script in
+    <code>maven.xml</code> and other plugins. In order to make use of these tags you must 
+    first import them with an appropriate <code>xmlns</code> directive, referencing the URI
+    '<code>javanet</code>' (without quotes).
+  </p>
+	<table border="1">
+		<thead>
+			<tr>
+				<td>Tag</td>
+				<td>Description</td>
+			</tr>
+		</thead>
+		<tbody>
+      <tr>
+        <td>
+          <code><strong>deploy</strong></code>
+        </td>
+        <td>
+          <source>&lt;javanet:deploy [failonerror="<strong>true</strong>|false"]&gt; ... &lt;/javanet:deploy&gt;</source>
+          <p>
+            Deploys a set of artifacts to the project's CVS for inclusion in the
+            site-wide Maven repository.
+          </p>
+          
+          <p>
+            The actual artifacts to deploy are specified via nested <code>artifact</code>
+            elements. Setting the <em>failonerror</em> attribute to false allows the build
+            to continue if the deployment fails for any reason.
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <code><strong>artifact</strong></code>
+        </td>
+        <td>
+        <source>&lt;javanet:artifact path="path/to/artifact" 
+                     [type="jar|war|plugin|dist"]  
+                     [withpom="<strong>true</strong>|false"] /&gt;</source>
+
+          <p>
+            Defines a single artifact within a <code>deploy</code> tag. Each artifact that is
+            to be deployed must be referenced by an <code>artifact</code> tag containing at least
+            the artifact path.
+          </p>
+          
+          <p>
+            The specified path should relatively or absolutely reference the local artifact file
+            that is to be deployed. With artifacts of type <code>jar</code>, <code>war</code>, or
+            <code>distribution</code> the <em>type</em> attribute is optional, since the tag will
+            determine the type from the file extension. <code>plugin</code> artifacts will need to
+            be explicitly stated however, since they are packaged as <code>.jar</code> files.
+          </p>
+
+          <p>
+            The optional <em>withpom</em> attribute allows you to disable copying of the
+            POM. This is useful in situations where you know the POM for this version already
+            exists in the repository, for example when deploying multiple artifacts of a single
+            type (as done with <code>distribution</code> artifacts) or deploying several artifact
+            types from the same project.
+          </p>
+        </td>
+      </tr>
+		</tbody>
+	</table>
+</section>
+</body>
+</document>
