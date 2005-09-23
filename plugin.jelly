@@ -64,7 +64,7 @@
       <echo message="Tempdir is ${tempdir}"/>
       <delete dir="${tempdir}"/>
       
-      <attainGoal name="javanet:run-updater" />
+      <javanet:run-updater />
     </define:tag>
 
     <!--
@@ -130,7 +130,41 @@
         <checksum todir="${pomPath}" file="${pomPath}/${maven.final.name}.pom" algorithm="MD5" fileext=".md5"/>
         <checksum todir="${pomPath}" file="${pomPath}/${maven.final.name}.pom" algorithm="SHA" fileext=".sha1"/>      
       </j:if>      
-    </define:tag>    
+    </define:tag>
+    
+    
+    <define:tag name="run-updater">
+      <!--
+        java.net web page updater doesn't react to the import command,
+        so we need to commit another file to trigger the updater.
+        
+        check out www into target/javanet-www
+      -->
+      <delete dir="${maven.build.dir}/javanet-www" />
+      <cvs dest="${maven.build.dir}" failonerror="true">
+        <commandline>
+          <argument value="-d${maven.javanet.cvsroot}"/>
+          <argument line="-z9 checkout -d javanet-www -l ${maven.javanet.project}/www"/>
+        </commandline>
+      </cvs>
+      
+      <echo file="${maven.build.dir}/javanet-www/.java.net.updater">${DSTAMP}${TSTAMP}</echo>
+      
+      <!-- add (in case this file isn't already in place), then commit -->
+      <cvs dest="${maven.build.dir}/javanet-www" failonerror="false">
+        <commandline>
+          <argument line="add .java.net.updater"/>
+        </commandline>
+      </cvs>
+      <cvs dest="${maven.build.dir}/javanet-www" failonerror="true">
+        <commandline>
+          <argument value="commit"/>
+          <argument value="-m"/>
+          <argument value="working around a bug in the java.net cvs updater"/>
+          <argument value=".java.net.updater"/>
+        </commandline>
+      </cvs>
+    </define:tag>
   </define:taglib>
   
   <!-- =============================
@@ -221,40 +255,7 @@
       </commandline>
     </cvs>
     
-    <attainGoal name="javanet:run-updater" />
-  </goal>
-  
-  <goal name="javanet:run-updater">
-    <!--
-      java.net web page updater doesn't react to the import command,
-      so we need to commit another file to trigger the updater.
-      
-      check out www into target/javanet-www
-    -->
-    <delete dir="${maven.build.dir}/javanet-www" />
-    <cvs dest="${maven.build.dir}" failonerror="true">
-      <commandline>
-        <argument value="-d${maven.javanet.cvsroot}"/>
-        <argument line="-z9 checkout -d javanet-www -l ${maven.javanet.project}/www"/>
-      </commandline>
-    </cvs>
-    
-    <echo file="${maven.build.dir}/javanet-www/.java.net.updater">${DSTAMP}${TSTAMP}</echo>
-    
-    <!-- add (in case this file isn't already in place), then commit -->
-    <cvs dest="${maven.build.dir}/javanet-www" failonerror="false">
-      <commandline>
-        <argument line="add .java.net.updater"/>
-      </commandline>
-    </cvs>
-    <cvs dest="${maven.build.dir}/javanet-www" failonerror="true">
-      <commandline>
-        <argument value="commit"/>
-        <argument value="-m"/>
-        <argument value="working around a bug in the java.net cvs updater"/>
-        <argument value=".java.net.updater"/>
-      </commandline>
-    </cvs>
+    <javanet:run-updater />
   </goal>
   
   
