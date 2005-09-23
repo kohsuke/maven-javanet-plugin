@@ -64,34 +64,8 @@
       <echo message="Tempdir is ${tempdir}"/>
       <delete dir="${tempdir}"/>
       
-      <cvs dest="${maven.build.dir}" failonerror="true">
-        <commandline>
-          <!--<argument value="-n"/>--><!-- testing -->
-          <argument value="-d${maven.javanet.cvsroot}"/>
-          <argument line="-z9 checkout -d repo -l ${maven.javanet.project}/repo"/>
-        </commandline>
-      </cvs>
-     
-      <!-- 'tempdir' is just a String remember -->
-      <echo file="${tempdir}/.java.net.updater">${DSTAMP}${TSTAMP}</echo>
-      <cvs dest="${tempdir}" failonerror="false">
-        <commandline>
-          <!--<argument value="-n"/>--><!-- testing -->
-          <argument line="add .java.net.updater"/>
-        </commandline>
-      </cvs>
-      <cvs dest="${tempdir}" failonerror="true">
-        <commandline>
-          <!--<argument value="-n"/>--><!-- testing -->
-          <argument value="commit"/>
-          <argument value="-m"/>
-          <argument value="working around a bug in the java.net cvs updater"/>
-          <argument value=".java.net.updater"/>
-        </commandline>
-      </cvs>
-      
-      <j:remove var="tempdir"/>
-    </define:tag>    
+      <attainGoal name="javanet:run-updater" />
+    </define:tag>
 
     <!--
       Represents a single artifact inside a javanet:deploy tag. Works by copying
@@ -247,6 +221,10 @@
       </commandline>
     </cvs>
     
+    <attainGoal name="javanet:run-updater" />
+  </goal>
+  
+  <goal name="javanet:run-updater">
     <!--
       java.net web page updater doesn't react to the import command,
       so we need to commit another file to trigger the updater.
@@ -278,6 +256,7 @@
       </commandline>
     </cvs>
   </goal>
+  
   
   <!-- 1.1 -->
   <goal name="javanet:deploy-jar"
