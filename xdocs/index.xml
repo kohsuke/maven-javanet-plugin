@@ -8,7 +8,7 @@
 	<ol>
 		<li>Deploy the Maven-generated web site to java.net.</li>
     <li>Upload the distribution files to java.net.</li>
-    <li>Host the artifacts in the java.net <a href='maven-repository.dev.java.net'>Maven repository</a>.</li>
+    <li>Host the artifacts in <a href='https://maven-repository.dev.java.net/'>the java.net Maven repository</a>.</li>
 	</ol>
 	<p>
 		If you have suggestions about useful goals, or if you are interested in developing this plug-in, please let the owners know!
