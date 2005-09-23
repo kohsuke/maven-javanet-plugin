@@ -42,7 +42,6 @@
         <commandline>
           <argument value="-d${maven.javanet.cvsroot}"/>
           <argument value="-z9"/>
-          <!-- --><argument value="-n"/><!-- --> <!-- testing -->
           <argument line="import -ko"/>
           <argument value="-W"/>
           <argument line="*.jar -k 'b'"/>
