@@ -10,6 +10,14 @@
   <p>
     In java.net, the web contents are connected to the CVS repository, and whenever a content is updated, the server runs an automated program to update the web contents. This updater has a bug in it that it doesn't recognize the CVS import command as a trigger. To work around this problem, invoking this goal adds a new file <code>www/.java.net.updater</code> into your repository.
   </p>
+  <p>
+    To use this goal with the multiproject plugin, put the following definition to your <tt>mave.xml</tt>
+  </p>
+<source><![CDATA[
+<goal name="site:generate">
+  <attainGoal name="multiproject:site" />
+</goal>
+]]>></source>
 </section>
 </body>
 </document>
