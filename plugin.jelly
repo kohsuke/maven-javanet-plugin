@@ -249,7 +249,7 @@
         <argument value="-m"/>
         <argument value="deploying the new web contents"/>
         
-        <argument value="${maven.javanet.docroot}"/>
+        <argument value="${maven.javanet.docroot.full}"/>
         <argument line="site-deployment t${DSTAMP}${TSTAMP}" />
       </commandline>
     </cvs>

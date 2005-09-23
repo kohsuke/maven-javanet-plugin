@@ -45,10 +45,11 @@
 			<tr>
 				<td>maven.javanet.docroot</td>
 				<td>
-					The CVS directory to which site contents is deployed	.
-					Used by the <code>javanet:site</code> goal.
+					The directory (relative to the web root) to which site contents are deployed. 
+          The value you enter here will be prefixed with <code>${maven.javanet.project}/www/</code>
+					to derive the full module name. Used by the <code>javanet:site</code> goal.
 				</td>
-				<td>${maven.javanet.project}/www/maven</td>
+				<td>maven</td>
 			</tr>
 		</tbody>
 	</table>
