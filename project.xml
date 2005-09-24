@@ -14,6 +14,11 @@
         <logo>https://jaxb.dev.java.net/branding/images/header_jnet_new.jpg</logo>
     </organization>
     <issueTrackingUrl>https://maven-javanet-plugin.dev.java.net/servlets/ProjectIssues</issueTrackingUrl>
+    <repository>
+        <connection>scm:cvs:pserver:guest@cvs.dev.java.net:/cvs:maven-javanet-plugin/maven-javanet-plugin</connection>
+        <developerConnection>scm:cvs:pserver:${maven.username}@cvs.dev.java.net:/cvs:maven-javanet-plugin/maven-javanet-plugin</developerConnection>
+        <url>https://maven-javanet-plugin.dev.java.net/source/browse/maven-javanet-plugin/maven-javanet-plugin/</url>
+    </repository>
     <mailingLists>
         <mailingList>
             <name>Users List</name>
