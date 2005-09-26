@@ -1,15 +1,28 @@
 <?xml version="1.0"?>
 <document>
 <body>
-<section name="Installing Maven java.net plugin">
-	<ol>
-		<li>
-			<a href="https://maven-javanet-plugin.dev.java.net/servlets/ProjectDocumentList">Download the plugin</a> and put the jar file into your $MAVEN_HOME/plugins.
-		</li>
-		<li>
-			Follow <a href="https://javanettasks.dev.java.net/nonav/maven/config.html">this instruction</a> and set up your java.net account information in <code>~/.java.net</code> file.
-		</li>
-	</ol>
+<section name="Downloading the plugin">
+  <p>The easiest way to install the plugin is with Maven itself. Issue a command like the following:</p>
+ 
+<source>maven plugin:download \
+  -Dmaven.repo.remove=https://maven-repository.dev.java.net/repository \
+  -DgroupId=maven-javanet-plugin \
+  -DartifactId=maven-javanet-plugin \
+  -Dversion=1.1</source>
+
+  <p>You'll need to run this command as a user with write access to <code>$MAVEN_HOME/plugins</code>.</p>
+
+  <p>Alternatively, you can install the plugin manually - Firstly download the <code>jar</code> from
+  <a href="https://maven-javanet-plugin.dev.java.net/servlets/ProjectDocumentList">the download page</a> and 
+  place it into your <code>$MAVEN_HOME/plugins</code> directory. You may need to manually delete your
+  plugin cache (usually <code>~/.maven/cache</code>) in order for the new version to be deployed properly.</p>
+
+</section>
+
+<section name="Entering your Java.net project details">
+	<p>Regardless of the installation method you choose, you'll need to follow 
+  <a href="https://javanettasks.dev.java.net/nonav/maven/config.html">this instruction</a> to 
+  set up your java.net account information in the <code>~/.java.net</code> file.</p>
 </section>
 
 </body>

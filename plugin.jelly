@@ -163,6 +163,11 @@
           <argument value=".java.net.updater"/>
         </commandline>
       </cvs>
+      
+      <!-- It confuses Eclipse having a working dir from one root inside a working dir from another,
+           esp when the second is inside a .cvsignored directory in the first... -->
+      <delete dir="${maven.build.dir}/javanet-www" />
+      
     </define:tag>
   </define:taglib>
   
