@@ -183,13 +183,8 @@
       <fail>Set "maven.javanet.project" to the project name on java.net</fail>
     </j:if>
   </goal>
-
-  <goal name="javanet:dist"
-        prereqs="javanet:check"
-        description="Post distribution zip/tar.gz to java.net">
-    
-    <attainGoal name="dist:build" />
-    
+  
+  <goal name="javanet:-taskdef">
     <taskdef resource="org/kohsuke/javanettasks.properties">
       <classpath>
         <fileset dir="${plugin.resources}/lib" includes="**/*.jar"/>
@@ -202,6 +197,13 @@
         <pathelement path="${plugin.getDependencyPath('jaxen')}"/>
       </classpath>
     </taskdef>
+  </goal>
+
+  <goal name="javanet:dist"
+        prereqs="javanet:check,javanet:-taskdef"
+        description="Post distribution zip/tar.gz to java.net">
+    
+    <attainGoal name="dist:build" />
     
     <echo>Uploading files to ${maven.javanet.release.folder}</echo>
     
@@ -298,5 +300,16 @@
       <javanet:artifact path="${maven.build.dir}/distributions/${maven.final.name}-src.tar.gz" withpom="false"/>
     </javanet:deploy>
   </goal>
-  <!-- == -->    
+  <!-- == -->
+  
+  <goal name="javanet:register-repository"
+        prereqs="javanet:-taskdef"
+        description="Register your project to the Java.net repository">
+    <echo>Adding 'maven_repository' user to the ${maven.javanet.project} project...</echo>
+    <javaNetAddMember projectName="${maven.javanet.project}"
+      role="Observer"
+      user="maven_repository"
+    />
+  </goal>
+  
 </project>
