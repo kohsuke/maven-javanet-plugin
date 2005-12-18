@@ -32,49 +32,29 @@
       -->
       <define:invokeBody/>
       
-      <!-- import the artifact(s). This should be done with common code for the
-           site deploy I guess...
-      -->
-      <javanet:cvs-import src="${tempdir}" dst="${maven.javanet.project}/repo" />
+      <!-- import the artifact(s). -->
+      <javanet:detectScm />
+      <j:switch on="${scm}">
+        <j:case value="cvs">
+          <javanet:cvs-import src="${tempdir}" dst="${maven.javanet.project}/repo" />
+        </j:case>
+        <j:case value="svn">
+          <attainGoal name="javanet:-taskdef-soimp" />
+          <echo>Importing to subversion</echo>
+          <soimp
+            dir="${tempdir}"
+            repository="${maven.javanet.svnroot}/trunk/repo"
+            create="true" />
+        </j:case>
+        <j:default>
+          <fail>Unsupported scheme ${scm}</fail>
+        </j:default>
+      </j:switch>
       
-      <!-- TODO set 'failonerror' false and just check out & touch the .java.net.updater file? -->
       <echo message="Tempdir is ${tempdir}"/>
       <delete dir="${tempdir}"/>
       
       <javanet:run-updater />
-    </define:tag>
-    
-    
-    <!--
-      run cvs import from the "@src" directory into
-      "@dst" module in CVS.
-    -->
-    <define:tag name="cvs-import">
-      <echo message="CVSROOT is: ${maven.javanet.cvsroot}"/>
-      <tstamp/>
-      <cvs dest="${src}" failonerror="${failonerror}">
-        <commandline>
-          <argument value="-d${maven.javanet.cvsroot}"/>
-          <argument line="-z9 import -ko"/>
-          <argument value="-W"/>
-          <argument line="*.jar -k 'b'"/>
-          <argument value="-W"/>
-          <argument line="*.war -k 'b'"/>
-          <argument value="-W"/>
-          <argument line="*.zip -k 'b'"/>
-          <argument value="-W"/>
-          <argument line="*.tar.gz -k 'b'"/>
-          <argument value="-W"/>
-          <argument value="*.png -k 'b'"/>
-          <argument value="-W"/>
-          <argument value="*.gif -k 'b'"/>
-          <argument value="-m"/>
-          <argument value="deployment by maven-javanet-plugin"/>
-          
-          <argument value="${dst}"/>
-          <argument line="deployment-by-maven-javanet-plugin t${DSTAMP}${TSTAMP}" />
-        </commandline>
-      </cvs>
     </define:tag>
 
     <!--
@@ -183,6 +163,41 @@
         <delete dir="${maven.build.dir}/javanet-www" />
       </j:if>
     </define:tag>
+    
+    
+    
+    <!--
+      run cvs import from the "@src" directory into
+      "@dst" module in CVS.
+    -->
+    <define:tag name="cvs-import">
+      <echo message="CVSROOT is: ${maven.javanet.cvsroot}"/>
+      <tstamp/>
+      <cvs dest="${src}" failonerror="${failonerror}">
+        <commandline>
+          <argument value="-d${maven.javanet.cvsroot}"/>
+          <argument line="-z9 import -ko"/>
+          <argument value="-W"/>
+          <argument line="*.jar -k 'b'"/>
+          <argument value="-W"/>
+          <argument line="*.war -k 'b'"/>
+          <argument value="-W"/>
+          <argument line="*.zip -k 'b'"/>
+          <argument value="-W"/>
+          <argument line="*.tar.gz -k 'b'"/>
+          <argument value="-W"/>
+          <argument value="*.png -k 'b'"/>
+          <argument value="-W"/>
+          <argument value="*.gif -k 'b'"/>
+          <argument value="-m"/>
+          <argument value="deployment by maven-javanet-plugin"/>
+          
+          <argument value="${dst}"/>
+          <argument line="deployment-by-maven-javanet-plugin t${DSTAMP}${TSTAMP}" />
+        </commandline>
+      </cvs>
+    </define:tag>
+    
     
     <define:tag name="detectScm">
       <!--
