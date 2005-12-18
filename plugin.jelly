@@ -133,41 +133,59 @@
     
     
     <define:tag name="run-updater">
-      <!--
-        java.net web page updater doesn't react to the import command,
-        so we need to commit another file to trigger the updater.
+      <javanet:detectScm />
+      
+      <j:if test="${scm=='cvs'}">
+        <!--
+          java.net web page updater doesn't react to the import command,
+          so we need to commit another file to trigger the updater.
+          
+          check out www into target/javanet-www
+        -->
+        <delete dir="${maven.build.dir}/javanet-www" />
+        <cvs dest="${maven.build.dir}" failonerror="true">
+          <commandline>
+            <argument value="-d${maven.javanet.cvsroot}"/>
+            <argument line="-z9 checkout -d javanet-www -l ${maven.javanet.project}/www"/>
+          </commandline>
+        </cvs>
         
-        check out www into target/javanet-www
+        <echo file="${maven.build.dir}/javanet-www/.java.net.updater">${DSTAMP}${TSTAMP}</echo>
+        
+        <!-- add (in case this file isn't already in place), then commit -->
+        <cvs dest="${maven.build.dir}/javanet-www" failonerror="false">
+          <commandline>
+            <argument line="add .java.net.updater"/>
+          </commandline>
+        </cvs>
+        <cvs dest="${maven.build.dir}/javanet-www" failonerror="true">
+          <commandline>
+            <argument value="commit"/>
+            <argument value="-m"/>
+            <argument value="working around a bug in the java.net cvs updater"/>
+            <argument value=".java.net.updater"/>
+          </commandline>
+        </cvs>
+        
+        <!-- It confuses Eclipse having a working dir from one root inside a working dir from another,
+             esp when the second is inside a .cvsignored directory in the first... -->
+        <delete dir="${maven.build.dir}/javanet-www" />
+      </j:if>
+    </define:tag>
+    
+    <define:tag name="detectScm">
+      <!--
+           decide if the project is cvs or svn.
+           I don't understand why I can't use <goal name="scm:parse-connection">.
+           there seems to be variable name scoping issues.
       -->
-      <delete dir="${maven.build.dir}/javanet-www" />
-      <cvs dest="${maven.build.dir}" failonerror="true">
-        <commandline>
-          <argument value="-d${maven.javanet.cvsroot}"/>
-          <argument line="-z9 checkout -d javanet-www -l ${maven.javanet.project}/www"/>
-        </commandline>
-      </cvs>
-      
-      <echo file="${maven.build.dir}/javanet-www/.java.net.updater">${DSTAMP}${TSTAMP}</echo>
-      
-      <!-- add (in case this file isn't already in place), then commit -->
-      <cvs dest="${maven.build.dir}/javanet-www" failonerror="false">
-        <commandline>
-          <argument line="add .java.net.updater"/>
-        </commandline>
-      </cvs>
-      <cvs dest="${maven.build.dir}/javanet-www" failonerror="true">
-        <commandline>
-          <argument value="commit"/>
-          <argument value="-m"/>
-          <argument value="working around a bug in the java.net cvs updater"/>
-          <argument value=".java.net.updater"/>
-        </commandline>
-      </cvs>
-      
-      <!-- It confuses Eclipse having a working dir from one root inside a working dir from another,
-           esp when the second is inside a .cvsignored directory in the first... -->
-      <delete dir="${maven.build.dir}/javanet-www" />
-      
+      <j:set var="scm" value="cvs" scope="parent" />
+      <j:if test="${pom.repository.developerConnection!=null}">
+        <j:set var="scm" value="${pom.repository.developerConnection.substring(4,7)}" scope="parent" />
+      </j:if>
+      <j:if test="${pom.repository.connection!=null}">
+        <j:set var="scm" value="${pom.repository.connection.substring(4,7)}" scope="parent" />
+      </j:if>
     </define:tag>
   </define:taglib>
   
@@ -185,6 +203,11 @@
   </goal>
   
   <goal name="javanet:-taskdef">
+    <taskdef name="soimp" classname="org.kohsuke.soimp.Soimp">
+      <classpath>
+        <fileset dir="${plugin.resources}/lib" includes="**/*.jar"/>
+      </classpath>
+    </taskdef>
     <taskdef resource="org/kohsuke/javanettasks.properties">
       <classpath>
         <fileset dir="${plugin.resources}/lib" includes="**/*.jar"/>
@@ -239,27 +262,45 @@
   
   
   <goal name="javanet:site"
-        prereqs="javanet:check"
+        prereqs="javanet:check,javanet:-taskdef"
         description="Post the generated website to java.net">
     <attainGoal name="site:generate" />
     <tstamp/>
     
     <!-- import the generated site -->
-    <cvs dest="${maven.docs.dest}" failonerror="true">
-      <commandline>
-        <argument value="-d${maven.javanet.cvsroot}"/>
-        <argument line="-z9 import -ko"/>
-        <argument value="-W"/>
-        <argument value="*.png -k 'b'"/>
-        <argument value="-W"/>
-        <argument value="*.gif -k 'b'"/>
-        <argument value="-m"/>
-        <argument value="deploying the new web contents"/>
-        
-        <argument value="${maven.javanet.docroot.full}"/>
-        <argument line="site-deployment t${DSTAMP}${TSTAMP}" />
-      </commandline>
-    </cvs>
+    <javanet:detectScm />
+    
+    <j:switch on="${scm}">
+      <j:case value="cvs">
+        <cvs dest="${maven.docs.dest}" failonerror="true">
+          <commandline>
+            <argument value="-d${maven.javanet.cvsroot}"/>
+            <argument line="-z9 import -ko"/>
+            <argument value="-W"/>
+            <argument value="*.png -k 'b'"/>
+            <argument value="-W"/>
+            <argument value="*.gif -k 'b'"/>
+            <argument value="-m"/>
+            <argument value="deploying the new web contents"/>
+            
+            <argument value="${maven.javanet.docroot.full}"/>
+            <argument line="site-deployment t${DSTAMP}${TSTAMP}" />
+          </commandline>
+        </cvs>
+      </j:case>
+      <j:case value="svn">
+        <echo>Importing to subversion</echo>
+        <!-- javadoc seems to have inconsistent use of CR/LF, which confuses SVN -->
+        <fixcrlf srcdir="${maven.docs.dest}" includes="**/*.html" />
+        <soimp
+          dir="${maven.docs.dest}"
+          repository="${maven.javanet.svnroot}/trunk/www/maven"
+          create="true" />
+      </j:case>
+      <j:default>
+        <fail>Unsupported scheme ${scm}</fail>
+      </j:default>
+    </j:switch>
     
     <javanet:run-updater />
   </goal>
