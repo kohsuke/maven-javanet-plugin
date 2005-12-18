@@ -5,10 +5,10 @@
   <p>The easiest way to install the plugin is with Maven itself. Issue a command like the following:</p>
  
 <source>maven plugin:download \
-  -Dmaven.repo.remove=https://maven-repository.dev.java.net/repository \
+  -Dmaven.repo.remote=https://maven-repository.dev.java.net/nonav/repository \
   -DgroupId=maven-javanet-plugin \
   -DartifactId=maven-javanet-plugin \
-  -Dversion=1.1</source>
+  -Dversion=1.2</source>
 
   <p>You'll need to run this command as a user with write access to <code>$MAVEN_HOME/plugins</code>.</p>
 

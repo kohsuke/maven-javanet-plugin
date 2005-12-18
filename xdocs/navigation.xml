@@ -12,7 +12,8 @@
    <menu name="Overview">
       <item name="Home"                    href="/index.html"/>
       <item name="Install"                 href="/install.html"/>
-     <item name="Properties"               href="/properties.html"/>
+      <item name="Project setup"           href="/project-setup.html"/>
+      <item name="Properties"              href="/properties.html"/>
       <item name="Goals">
         <item name="javanet:site"          href="/goals/site.html"/>
         <item name="javanet:dist"          href="/goals/dist.html"/>

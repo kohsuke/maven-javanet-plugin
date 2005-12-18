@@ -43,6 +43,14 @@
 				<td>:pserver:${maven.username}@cvs.dev.java.net:/cvs</td>
 			</tr>
 			<tr>
+				<td>maven.javanet.svnroot</td>
+				<td>
+					The svn repository location of your java.net project.
+					Used by the <code>javanet:site</code> and <code>javanet:deploy-[artifact]</code> goals.
+				</td>
+				<td>https://svn.dev.java.net/svn/${maven.javanet.project}</td>
+			</tr>
+			<tr>
 				<td>maven.javanet.docroot</td>
 				<td>
 					The directory (relative to the web root) to which site contents are deployed. 

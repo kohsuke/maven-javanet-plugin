@@ -3,12 +3,15 @@
 <body>
 <section name="Uploading the generated website to java.net">
   <p>
-    The <code>javanet:site</code> goal uploads the artifacts of the <code>site:generate</code> goal into your project's web area by importing those files into the <code>www/maven</code> folder of your CVS. The uploaded contents can be accessed as <code>http://yourproject.dev.java.net/nonav/maven/</code>.
+    The <code>javanet:site</code> goal uploads the artifacts of the <code>site:generate</code> goal into your project's web area by importing those files into the <code>www/maven</code> folder of your CVS/Subversion. The uploaded contents can be accessed as <code>http://yourproject.dev.java.net/nonav/maven/</code>.
   </p>
 </section>
 <section name="Note">
   <p>
-    In java.net, the web contents are connected to the CVS repository, and whenever a content is updated, the server runs an automated program to update the web contents. This updater has a bug in it that it doesn't recognize the CVS import command as a trigger. To work around this problem, invoking this goal adds a new file <code>www/.java.net.updater</code> into your repository.
+    In CVS-based java.net projects, the web contents are connected to the CVS repository, and whenever a content is updated, the server runs an automated program to update the web contents. This updater has a bug in it that it doesn't recognize the CVS import command as a trigger. To work around this problem, invoking this goal adds a new file <code>www/.java.net.updater</code> into your repository.
+  </p>
+  <p>
+    In Subversion-based java.net projects, the automated program runs asynchronously from <tt>svn commit</tt>. So there seems to be certain delay between the time the commit operation completes and the time the contents become visible.
   </p>
   <p>
     To use this goal with the multiproject plugin, put the following definition to your <tt>mave.xml</tt>
@@ -17,7 +20,7 @@
 <goal name="site:generate">
   <attainGoal name="multiproject:site" />
 </goal>
-]]>></source>
+]]></source>
 </section>
 </body>
 </document>
