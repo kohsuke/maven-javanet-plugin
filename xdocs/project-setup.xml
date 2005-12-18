@@ -11,7 +11,7 @@
     </li>
     <li>
       Make sure that <tt>project.xml</tt> has the right &lt;repository>/&lt;connection> parameter, such as
-      <tt>scm:cvs:pserver:guest@cvs.dev.java.net:/cvs:${maven.javanet.project}</tt> or <tt>scm:svn:https://guest@${maven.javanet.project}.dev.java.net/svn/${maven.javanet.project}</tt>. This plugin uses this setting to determine if the project is CVS-based or Subversion-based.
+      <tt>scm:cvs:pserver:guest@cvs.dev.java.net:/cvs:${maven.javanet.project}</tt> or <tt>scm:svn:https://guest@svn.dev.java.net/svn/${maven.javanet.project}</tt>. This plugin uses this setting to determine if the project is CVS-based or Subversion-based.
     </li>
   </ol>
 </section>

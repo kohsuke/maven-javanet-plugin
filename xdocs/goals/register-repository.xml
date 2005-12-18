@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<document>
+<body>
+<section name="Registering your project with java.net maven repository">
+  <p>
+    The <code>javanet:register-repository</code> goal performs a registration of your project to <a href="https://maven-repository.dev.java.net/">the java.net-wide maven repository</a>. This goal only needs to be run once per one project, and within an hour or so, you'll receive an e-mail confirming your registration.
+  </p>
+  <p>
+    Once the registration is complete, you can start using the <a href="deploy.html">javanet:deploy-XXX</a> goals to push artifacts into the repository.
+  </p>
+</section>
+</body>
+</document>
