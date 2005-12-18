@@ -16,7 +16,7 @@
       'failonerror' - Fail on error (defaults true)
     -->
     <define:tag name="deploy">
-      <attainGoal name="javanet:check"/>      
+      <attainGoal name="javanet:check"/>
       <j:set var="failonerror" value="${failonerror}" defaultValue="true"/>
       
       <!-- 
@@ -30,19 +30,32 @@
         Run the body. This should be 'artifact' tags, each of which will
         copy appropriately below the temp dir 
       -->
-      <define:invokeBody/>      
+      <define:invokeBody/>
       
       <!-- import the artifact(s). This should be done with common code for the
            site deploy I guess...
       -->
-      <echo message="CVSROOT is: ${maven.javanet.cvsroot}"/>
+      <javanet:cvs-import src="${tempdir}" dst="${maven.javanet.project}/repo" />
       
-      <tstamp/>    
-      <cvs dest="${tempdir}" failonerror="${failonerror}">
+      <!-- TODO set 'failonerror' false and just check out & touch the .java.net.updater file? -->
+      <echo message="Tempdir is ${tempdir}"/>
+      <delete dir="${tempdir}"/>
+      
+      <javanet:run-updater />
+    </define:tag>
+    
+    
+    <!--
+      run cvs import from the "@src" directory into
+      "@dst" module in CVS.
+    -->
+    <define:tag name="cvs-import">
+      <echo message="CVSROOT is: ${maven.javanet.cvsroot}"/>
+      <tstamp/>
+      <cvs dest="${src}" failonerror="${failonerror}">
         <commandline>
           <argument value="-d${maven.javanet.cvsroot}"/>
-          <argument value="-z9"/>
-          <argument line="import -ko"/>
+          <argument line="-z9 import -ko"/>
           <argument value="-W"/>
           <argument line="*.jar -k 'b'"/>
           <argument value="-W"/>
@@ -51,19 +64,17 @@
           <argument line="*.zip -k 'b'"/>
           <argument value="-W"/>
           <argument line="*.tar.gz -k 'b'"/>
+          <argument value="-W"/>
+          <argument value="*.png -k 'b'"/>
+          <argument value="-W"/>
+          <argument value="*.gif -k 'b'"/>
           <argument value="-m"/>
-          <argument value="Repository deployment"/>
+          <argument value="deployment by maven-javanet-plugin"/>
           
-          <argument value="${maven.javanet.project}/repo"/>
-          <argument line="repo-deployment t${DSTAMP}${TSTAMP}" />
+          <argument value="${dst}"/>
+          <argument line="deployment-by-maven-javanet-plugin t${DSTAMP}${TSTAMP}" />
         </commandline>
       </cvs>
-      
-      <!-- TODO set 'failonerror' false and just check out & touch the .java.net.updater file? -->
-      <echo message="Tempdir is ${tempdir}"/>
-      <delete dir="${tempdir}"/>
-      
-      <javanet:run-updater />
     </define:tag>
 
     <!--
@@ -203,11 +214,6 @@
   </goal>
   
   <goal name="javanet:-taskdef">
-    <taskdef name="soimp" classname="org.kohsuke.soimp.Soimp">
-      <classpath>
-        <fileset dir="${plugin.resources}/lib" includes="**/*.jar"/>
-      </classpath>
-    </taskdef>
     <taskdef resource="org/kohsuke/javanettasks.properties">
       <classpath>
         <fileset dir="${plugin.resources}/lib" includes="**/*.jar"/>
@@ -218,6 +224,13 @@
         <pathelement path="${plugin.getDependencyPath('nekohtml')}"/>
         <pathelement path="${plugin.getDependencyPath('dom4j')}"/>
         <pathelement path="${plugin.getDependencyPath('jaxen')}"/>
+      </classpath>
+    </taskdef>
+  </goal>
+  <goal name="javanet:-taskdef-soimp">
+    <taskdef name="soimp" classname="org.kohsuke.soimp.Soimp">
+      <classpath>
+        <fileset dir="${plugin.resources}/lib" includes="**/*.jar"/>
       </classpath>
     </taskdef>
   </goal>
@@ -262,7 +275,7 @@
   
   
   <goal name="javanet:site"
-        prereqs="javanet:check,javanet:-taskdef"
+        prereqs="javanet:check"
         description="Post the generated website to java.net">
     <attainGoal name="site:generate" />
     <tstamp/>
@@ -272,29 +285,16 @@
     
     <j:switch on="${scm}">
       <j:case value="cvs">
-        <cvs dest="${maven.docs.dest}" failonerror="true">
-          <commandline>
-            <argument value="-d${maven.javanet.cvsroot}"/>
-            <argument line="-z9 import -ko"/>
-            <argument value="-W"/>
-            <argument value="*.png -k 'b'"/>
-            <argument value="-W"/>
-            <argument value="*.gif -k 'b'"/>
-            <argument value="-m"/>
-            <argument value="deploying the new web contents"/>
-            
-            <argument value="${maven.javanet.docroot.full}"/>
-            <argument line="site-deployment t${DSTAMP}${TSTAMP}" />
-          </commandline>
-        </cvs>
+        <javanet:cvs-import src="${maven.docs.dest}" dst="${maven.javanet.docroot.full}" />
       </j:case>
       <j:case value="svn">
+        <attainGoal name="javanet:-taskdef-soimp" />
         <echo>Importing to subversion</echo>
         <!-- javadoc seems to have inconsistent use of CR/LF, which confuses SVN -->
         <fixcrlf srcdir="${maven.docs.dest}" includes="**/*.html" />
         <soimp
           dir="${maven.docs.dest}"
-          repository="${maven.javanet.svnroot}/trunk/www/maven"
+          repository="${maven.javanet.svnroot}/trunk/www/${maven.javanet.docroot}"
           create="true" />
       </j:case>
       <j:default>
