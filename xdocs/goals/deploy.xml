@@ -30,9 +30,10 @@
   </ol>
 
   <p>
-    <strong>Please Note</strong>: As mentioned above, deployment is handled via your project's CVS repository, 
-    and requires prior addition of a special user to your project on Java.net. Additionally, there may be a 
-    short delay between deploying your artifact and it's appearance in the repository.
+    <strong>Please Note</strong>: As mentioned above, deployment is handled via your project's CVS/Subversion
+    repository, and requires <a href="register-repository.html">prior registration of your project
+    on Java.net</a>. Additionally, there may be a short delay between deploying your artifact and
+    it's appearance in the repository.
   </p>
 
   <p>
@@ -61,7 +62,7 @@
       As explained <a href='http://maven.apache.org/reference/plugins/artifact/tags.html' target='_blank'>here</a>,
       the preferred way to obtain this functionality is to suffix the <code>currentVersion</code> in your 
       <code>project.xml</code> with <code><strong>SNAPSHOT</strong></code>. Doing so will cause Maven
-      to examine to examine the timestamp on every build, downloading if the remote artifact is newer than
+      to examine the timestamp on every build, downloading if the remote artifact is newer than
       the local version.
     </p>
   </subsection>
@@ -78,7 +79,7 @@
     Artifacts deployed using this goal can be downloaded and installed by any Maven user with 
     a command like the following (on a single line):
     <source>maven plugin:download \
-    -Dmaven.repo.remote=http://maven-repository.dev.java.net/repository \
+    -Dmaven.repo.remote=http://maven-repository.dev.java.net/nonav/repository \
     -DgroupId=<strong>something4j</strong> \
     -DartifactId=<strong>maven-something4j-plugin</strong> \
     -Dversion=<strong>1.10</strong></source>
