@@ -206,10 +206,10 @@
            there seems to be variable name scoping issues.
       -->
       <j:set var="scm" value="cvs" scope="parent" />
-      <j:if test="${pom.repository.developerConnection!=null}">
+      <j:if test="${!empty(pom.repository.developerConnection)}">
         <j:set var="scm" value="${pom.repository.developerConnection.substring(4,7)}" scope="parent" />
       </j:if>
-      <j:if test="${pom.repository.connection!=null}">
+      <j:if test="${!empty(pom.repository.connection)}">
         <j:set var="scm" value="${pom.repository.connection.substring(4,7)}" scope="parent" />
       </j:if>
     </define:tag>
