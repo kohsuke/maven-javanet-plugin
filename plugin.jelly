@@ -34,7 +34,8 @@
       <define:invokeBody/>
       
       <!-- import the artifact(s). -->
-      <j:if test="${maven.javanet.deploy.dryrun=='false'}">
+      <j:set var="dryrun" value="${maven.javanet.deploy.dryrun}"/>
+      <j:if test="${dryrun=='false'}">
         <javanet:detectScm />
         <j:switch on="${scm}">
           <j:case value="cvs">
