@@ -24,6 +24,7 @@
            conflicts arise when commiting java.net.updater.
       -->
       <j:set var="tempdir" value="${maven.build.dir}/repo"/>
+      <echo message="Tempdir is ${tempdir}"/>
       <delete dir="${tempdir}"/>
       
       <!-- 
@@ -33,26 +34,27 @@
       <define:invokeBody/>
       
       <!-- import the artifact(s). -->
-      <javanet:detectScm />
-      <j:switch on="${scm}">
-        <j:case value="cvs">
-          <javanet:cvs-import src="${tempdir}" dst="${maven.javanet.project}/repo" />
-        </j:case>
-        <j:case value="svn">
-          <attainGoal name="javanet:-taskdef-soimp" />
-          <echo>Importing to subversion</echo>
-          <soimp
-            dir="${tempdir}"
-            repository="${maven.javanet.svnroot}/trunk/repo"
-            create="true" />
-        </j:case>
-        <j:default>
-          <fail>Unsupported scheme ${scm}</fail>
-        </j:default>
-      </j:switch>
-      
-      <echo message="Tempdir is ${tempdir}"/>
-      <delete dir="${tempdir}"/>
+      <j:if test="${maven.javanet.deploy.dryrun!=true}">
+	      <javanet:detectScm />
+	      <j:switch on="${scm}">
+	        <j:case value="cvs">
+	          <javanet:cvs-import src="${tempdir}" dst="${maven.javanet.project}/repo" />
+	        </j:case>
+	        <j:case value="svn">
+	          <attainGoal name="javanet:-taskdef-soimp" />
+	          <echo>Importing to subversion</echo>
+	          <soimp
+	            dir="${tempdir}"
+	            repository="${maven.javanet.svnroot}/trunk/repo"
+	            create="true" />
+	        </j:case>
+	        <j:default>
+	          <fail>Unsupported scheme ${scm}</fail>
+	        </j:default>
+	      </j:switch>
+	      
+	      <delete dir="${tempdir}"/>
+	    </j:if>
       
       <javanet:run-updater />
     </define:tag>
@@ -206,11 +208,13 @@
            there seems to be variable name scoping issues.
       -->
       <j:set var="scm" value="cvs" scope="parent" />
-      <j:if test="${!empty(pom.repository.developerConnection)}">
-        <j:set var="scm" value="${pom.repository.developerConnection.substring(4,7)}" scope="parent" />
+      <j:set var="devcon" value="${pom.repository.developerConnection}" />
+      <j:if test="${!empty(devcon) and size(devcon)>7}">
+        <j:set var="scm" value="${devcon.substring(4,7)}" scope="parent" />
       </j:if>
-      <j:if test="${!empty(pom.repository.connection)}">
-        <j:set var="scm" value="${pom.repository.connection.substring(4,7)}" scope="parent" />
+      <j:set var="con" value="${pom.repository.connection}" />
+      <j:if test="${!empty(con) and size(con)>7}">
+        <j:set var="scm" value="${con.substring(4,7)}" scope="parent" />
       </j:if>
     </define:tag>
   </define:taglib>
@@ -226,6 +230,7 @@
     <j:if test="${context.getVariable('maven.javanet.project')==null}">
       <fail>Set "maven.javanet.project" to the project name on java.net</fail>
     </j:if>
+    <javanet:detectScm />
   </goal>
   
   <goal name="javanet:-taskdef">
