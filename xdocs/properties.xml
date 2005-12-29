@@ -59,6 +59,15 @@
 				</td>
 				<td>maven</td>
 			</tr>
+			<tr>
+				<td>maven.javanet.deploy.dryrun</td>
+				<td>
+					If true, the <tt>javanet:deploy-XXX</tt> goals will just perform dry runs without
+					actually uploading repositories. Files to be uploaded will be left in <tt>target/repo</tt>
+					directory, which can be verified manually.
+				</td>
+				<td>false</td>
+			</tr>
 		</tbody>
 	</table>
 </section>

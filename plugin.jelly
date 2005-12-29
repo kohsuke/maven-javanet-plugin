@@ -34,29 +34,29 @@
       <define:invokeBody/>
       
       <!-- import the artifact(s). -->
-      <j:if test="${maven.javanet.deploy.dryrun!=true}">
-	      <javanet:detectScm />
-	      <j:switch on="${scm}">
-	        <j:case value="cvs">
-	          <javanet:cvs-import src="${tempdir}" dst="${maven.javanet.project}/repo" />
-	        </j:case>
-	        <j:case value="svn">
-	          <attainGoal name="javanet:-taskdef-soimp" />
-	          <echo>Importing to subversion</echo>
-	          <soimp
-	            dir="${tempdir}"
-	            repository="${maven.javanet.svnroot}/trunk/repo"
-	            create="true" />
-	        </j:case>
-	        <j:default>
-	          <fail>Unsupported scheme ${scm}</fail>
-	        </j:default>
-	      </j:switch>
-	      
-	      <delete dir="${tempdir}"/>
-	    </j:if>
-      
-      <javanet:run-updater />
+      <j:if test="${maven.javanet.deploy.dryrun=='false'}">
+        <javanet:detectScm />
+        <j:switch on="${scm}">
+          <j:case value="cvs">
+            <javanet:cvs-import src="${tempdir}" dst="${maven.javanet.project}/repo" />
+          </j:case>
+          <j:case value="svn">
+            <attainGoal name="javanet:-taskdef-soimp" />
+            <echo>Importing to subversion</echo>
+            <soimp
+              dir="${tempdir}"
+              repository="${maven.javanet.svnroot}/trunk/repo"
+              create="true" />
+          </j:case>
+          <j:default>
+            <fail>Unsupported scheme ${scm}</fail>
+          </j:default>
+        </j:switch>
+        
+        <delete dir="${tempdir}"/>
+        
+        <javanet:run-updater />
+      </j:if>
     </define:tag>
 
     <!--
