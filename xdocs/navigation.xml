@@ -18,6 +18,7 @@
         <item name="javanet:site"          href="/goals/site.html"/>
         <item name="javanet:dist"          href="/goals/dist.html"/>
         <item name="javanet:deploy-XXX"    href="/goals/deploy.html"/>
+        <item name="javanet:genapp"        href="/goals/genapp.html"/>
         <item name="javanet:register-repository" href="/goals/register-repository.html"/>
       </item>
       <item name="Tags"                    href="/tags.html"/>

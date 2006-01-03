@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<document>
+<properties>
+  <title>javanet:genapp goal</title>
+</properties>
+<body>
+<section name="Generating a project skeleton">
+  <p>
+    The <code>javanet:genapp</code> goal generates a skeleton for a java.net project. It sets up mailing lists, source repository information, issue tracking URL, and a few other things according to the java.net project layout. It also set properties up so that you can use other maven java.net plugin goals.
+  </p>
+  <p>
+    Currently this goal doesn't perform the <tt>javanet:register-repository</tt> goal, but perhaps it should.
+  </p>
+</section>
+</body>
+</document>
