@@ -3,6 +3,7 @@
          xmlns:util="jelly:util"
          xmlns:maven="jelly:maven"
          xmlns:define="jelly:define"
+         xmlns:g="genapp"
          xmlns:javanet="javanet">
 
   <!-- =============================
@@ -374,4 +375,8 @@
     />
   </goal>
   
+  <goal name="javanet:genapp"
+        description="Generate a new skeleton for a java.net project">
+    <g:generate maven.genapp.template.dir="${plugin.resources}/genapp-template" />
+  </goal>
 </project>
