@@ -1,0 +1,11 @@
+<project default="default">
+  <postGoal name="xdoc">
+    <!-- run keyword substitution -->
+    <echo>Replacing keywords</echo>
+    <replace dir="target/docs">
+      <replacefilter 
+        token="@@VERSION@@" 
+        value="${pom.currentVersion}" />
+    </replace>
+  </postGoal>
+</project>
