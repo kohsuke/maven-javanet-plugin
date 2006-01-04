@@ -34,6 +34,9 @@
       -->
       <define:invokeBody/>
       
+      <!-- this file tells the daemon which groupId we'd like to use -->
+      <echo file="${maven.build.dir}/repo/.groupId">${pom.groupId}</echo>
+      
       <!-- import the artifact(s). -->
       <j:set var="dryrun" value="${maven.javanet.deploy.dryrun}"/>
       <j:if test="${dryrun=='false'}">
