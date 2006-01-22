@@ -124,9 +124,9 @@
         <j:set var="pomPath" value="${tempdir}/poms"/>
         <mkdir dir="${pomPath}"/>
         <copy tofile="${pomPath}/${maven.final.name}.pom" file="${pom.file.absolutePath}"/> 
-        <checksum todir="${pomPath}" file="${pomPath}/${maven.final.name}.pom" algorithm="MD5" fileext=".md5"/>
-        <checksum todir="${pomPath}" file="${pomPath}/${maven.final.name}.pom" algorithm="SHA" fileext=".sha1"/>      
-      </j:if>      
+        <checksum file="${pomPath}/${maven.final.name}.pom" algorithm="MD5" fileext=".md5"/>
+        <checksum file="${pomPath}/${maven.final.name}.pom" algorithm="SHA" fileext=".sha1"/>      
+      </j:if>
     </define:tag>
     
     
