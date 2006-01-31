@@ -371,11 +371,20 @@
   <goal name="javanet:register-repository"
         prereqs="javanet:-taskdef"
         description="Register your project to the Java.net repository">
-    <echo>Adding 'maven_repository' user to the ${maven.javanet.project} project...</echo>
-    <javaNetAddMember projectName="${maven.javanet.project}"
-      role="Observer"
-      user="maven_repository"
-    />
+    <javaNetCheckMember projectName="${maven.javanet.project}" role="Observer" user="maven_repository"
+      property="isMember" />
+    <j:choose>
+      <j:when test="${!isMember}">
+        <echo>Adding 'maven_repository' user to the ${maven.javanet.project} project...</echo>
+        <javaNetAddMember projectName="${maven.javanet.project}"
+          role="Observer"
+          user="maven_repository"
+        />
+      </j:when>
+      <j:otherwise>
+        <echo>${maven.javanet.project} project is already registered</echo>
+      </j:otherwise>
+    </j:choose>
   </goal>
   
   <goal name="javanet:genapp"
