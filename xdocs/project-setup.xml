@@ -7,7 +7,10 @@
   </p>
   <ol>
     <li>
-      Make sure that the groupId of your project matches to the java.net project name.
+      Make sure that the groupId of your project matches to the Maven convention (org.jvnet.<i>project</i> or a package name you control.)
+    </li>
+    <li>
+      Make sure to set <tt>maven.javanet.project</tt> property to your java.net project name.
     </li>
     <li>
       Make sure that <tt>project.xml</tt> has the right &lt;repository>/&lt;connection> parameter, such as
