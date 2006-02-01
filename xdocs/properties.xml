@@ -17,9 +17,7 @@
 			<tr>
 				<td>maven.javanet.project</td>
 				<td>
-					The name of your java.net project. This property is used by all goals. If you
-          are deploying your project in the site-wide repository, you <strong>must not</strong>
-          modify this property from the default, and the groupId must match the project name.
+					The name of your java.net project. This property is used by all goals.
 				</td>
 				<td>
 					The value of <code>${pom.groupId}</code>.
