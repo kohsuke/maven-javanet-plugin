@@ -38,10 +38,7 @@
 
   <p>
     In order to host artifacts in the repository, projects must ensure that the <code>groupId</code> 
-    defined in their POM matches the name of their project on java.net. This is an intentional limitation
-    of the system - artifacts will <strong>always</strong> be deployed to a repository location based on
-    the project name, regardless of the setting in the POM. Any mismatch may cause your artifacts to fail
-    when referenced in a build.
+    defined in their POM matches the name of their project on java.net. Specifically, please use the groupId as described in the convention (reverse DNS name like a Java package name.)
   </p>
 
   <p>

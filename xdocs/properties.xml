@@ -20,7 +20,7 @@
 					The name of your java.net project. This property is used by all goals.
 				</td>
 				<td>
-					The value of <code>${pom.groupId}</code>.
+					None. This property is mandatory.
 				</td>
 			</tr>
 			<tr>

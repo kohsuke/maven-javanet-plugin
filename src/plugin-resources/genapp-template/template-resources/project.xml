@@ -2,7 +2,7 @@
 <project>
   <pomVersion>3</pomVersion>
   <currentVersion>1.0</currentVersion>
-  <groupId>@ID@</groupId>
+  <groupId>@PACKAGE@</groupId>
   <artifactId>@ID@</artifactId>
   <name>@NAME@</name>
   <package>@PACKAGE@</package>
