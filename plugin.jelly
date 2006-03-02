@@ -4,6 +4,7 @@
          xmlns:maven="jelly:maven"
          xmlns:define="jelly:define"
          xmlns:g="genapp"
+         xmlns:artifact="artifact"
          xmlns:javanet="javanet">
 
   <!-- =============================
@@ -123,9 +124,10 @@
       <j:if test="${withPom}">
         <j:set var="pomPath" value="${tempdir}/poms"/>
         <mkdir dir="${pomPath}"/>
-        <copy tofile="${pomPath}/${maven.final.name}.pom" file="${pom.file.absolutePath}"/> 
+        <!-- instead of simplying copying pom, use the fully rewritten version -->
+        <artifact:rewritePOM path="${pomPath}/${maven.final.name}.pom"/>
         <checksum file="${pomPath}/${maven.final.name}.pom" algorithm="MD5" fileext=".md5"/>
-        <checksum file="${pomPath}/${maven.final.name}.pom" algorithm="SHA" fileext=".sha1"/>      
+        <checksum file="${pomPath}/${maven.final.name}.pom" algorithm="SHA" fileext=".sha1"/>
       </j:if>
     </define:tag>
     
@@ -349,7 +351,7 @@
   </goal>
   
   <goal name="javanet:deploy-plugin"
-        prereqs="javanet:check,jar:jar"
+        prereqs="javanet:check,plugin:plugin"
         description="Deploy the Jar to the Java.net repository">
     <javanet:deploy>
       <javanet:artifact path="${maven.build.dir}/${maven.final.name}.jar" type="plugin"/>
