@@ -35,9 +35,6 @@
       -->
       <define:invokeBody/>
       
-      <!-- this file tells the daemon which groupId we'd like to use -->
-      <echo file="${maven.build.dir}/repo/.groupId">${pom.groupId}</echo>
-      
       <!-- import the artifact(s). -->
       <j:set var="dryrun" value="${maven.javanet.deploy.dryrun}"/>
       <j:if test="${dryrun=='false'}">
@@ -107,7 +104,7 @@
         </j:choose>
       </j:if>    
       
-      <j:set var="repoPath" value="${tempdir}/${type}s"/>
+      <j:set var="repoPath" value="${tempdir}/${pom.groupId}/${type}s"/>
 
       <echo message="Type is '${type}'"/>
       <echo message="Path is '${repoPath}'"/>
@@ -122,7 +119,7 @@
       
       <!-- COPY POM -->
       <j:if test="${withPom}">
-        <j:set var="pomPath" value="${tempdir}/poms"/>
+        <j:set var="pomPath" value="${tempdir}/${pom.groupId}/poms"/>
         <mkdir dir="${pomPath}"/>
         <!-- instead of simplying copying pom, use the fully rewritten version -->
         <artifact:rewritePOM path="${pomPath}/${maven.final.name}.pom"/>
