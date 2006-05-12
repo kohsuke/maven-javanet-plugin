@@ -68,7 +68,7 @@
       
       'path'    - Path to the artifact (REQUIRED)
       'type'    - Artifact type (jar, war, plugin, distribution. Default: based on file ext)
-      'withPom' - Copy POM? (defaults: true)      
+      'withPom' - Copy POM? (defaults: true)
       
       TODO I think we may need to support 'license' artifacts too?     
     -->
@@ -329,13 +329,19 @@
     <javanet:run-updater />
   </goal>
   
-  
-  <!-- 1.1 -->
   <goal name="javanet:deploy-jar"
         prereqs="javanet:check,jar:jar"
         description="Deploy the Jar to the Java.net repository">
     <javanet:deploy>
       <javanet:artifact path="${maven.build.dir}/${maven.final.name}.jar"/>
+    </javanet:deploy>
+  </goal>
+  
+  <goal name="javanet:deploy-java-source"
+        prereqs="javanet:check,source:source"
+        description="Deploy the java source jar to the Java.net repository">
+    <javanet:deploy>
+      <javanet:artifact path="${maven.build.dir}/${maven.source.final.name}" type="java-source"/>
     </javanet:deploy>
   </goal>
   

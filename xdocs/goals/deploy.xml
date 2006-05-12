@@ -13,6 +13,7 @@
     <li><code>javanet:deploy-war</code> - Build with <code>war:war</code> then deploy as a war.</li>
     <li><code>javanet:deploy-plugin</code> - Build with <code>jar:jar</code> then deploy as a plugin.</li>
     <li><code>javanet:deploy-dist</code> - Build with <code>dist</code> then deploy as distributions.</li>
+    <li><code>javanet:deploy-java-source</code> - Build with <a href="http://maven.apache.org/maven-1.x/plugins/source/"><code>source:source</code></a> then deploy as a source jar.</li>
   </ul>
 
   <p>
